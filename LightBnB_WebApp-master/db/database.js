@@ -11,8 +11,6 @@ const pool = new Pool ({
   database: 'lightbnb'
 })
 
-// pool.query(`SELECT title FROM properties LIMIT 10;`).then(response => {console.log(response)})
-
 
 /// Users
 
@@ -21,22 +19,10 @@ const pool = new Pool ({
  * @param {String} email The email of the user.
  * @return {Promise<{}>} A promise to the user.
  */
-// const getUserWithEmail = function (email) {
-//   let resolvedUser = null;
-//   for (const userId in users) {
-//     const user = users[userId];
-//     if (user && user.email.toLowerCase() === email.toLowerCase()) {
-//       resolvedUser = user;
-//     }
-//   }
-//   return Promise.resolve(resolvedUser);
-// };
-
 const getUserWithEmail =  (email) => {
   return pool
     .query(`SELECT * FROM users WHERE email like $1;`, [email])
     .then((result) => {
-      console.log(result.rows);
       if (result.rows.length === 0) {
         return null;
       } else {
@@ -59,7 +45,6 @@ const getUserWithId = function (id) {
   return pool
     .query(`SELECT * FROM users WHERE id = $1;`, [id])
     .then((result) => {
-      console.log(result.rows);
       if (result.rows.length === 0) {
         return null;
       } else {
@@ -81,7 +66,6 @@ const addUser = function (user) {
   return pool
     .query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;`, [user.name, user.email, user.password])
     .then((result) => {
-      console.log(result.rows);
       if (result.rows.length === 0) {
         return null;
       } else {
@@ -113,7 +97,6 @@ const getAllReservations = function (guest_id, limit = 10) {
     ORDER BY reservations.start_date
     LIMIT $2;`, prams)
     .then((result) => {
-      console.log(result.rows);
       return result.rows;
     })
     .catch((err) => {
@@ -129,17 +112,6 @@ const getAllReservations = function (guest_id, limit = 10) {
  * @param {*} limit The number of results to return.
  * @return {Promise<[{}]>}  A promise to the properties.
  */
-// const getAllProperties = (options, limit = 10) => {
-//   return pool
-//     .query(`SELECT * FROM properties LIMIT $1;`, [limit])
-//     .then((result) => {
-//       console.log(result.rows);
-//       return result.rows;
-//     })
-//     .catch((err) => {
-//       console.log(err.message);
-//     });
-// };
 
 const getAllProperties = function (options, limit = 10) {
   // 1
@@ -201,12 +173,6 @@ const getAllProperties = function (options, limit = 10) {
  * @param {{}} property An object containing all of the property details.
  * @return {Promise<{}>} A promise to the property.
  */
-// const addProperty = function (property) {
-//   const propertyId = Object.keys(properties).length + 1;
-//   property.id = propertyId;
-//   properties[propertyId] = property;
-//   return Promise.resolve(property);
-// };
 
 const addProperty = (property) => {
   return pool
@@ -246,7 +212,6 @@ const addProperty = (property) => {
         property.number_of_bedrooms,
       ])
     .then((result) => {
-      console.log(result.rows);
       return result.rows[0];
     })
     .catch((err) => {
